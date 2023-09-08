@@ -1,9 +1,9 @@
-ARG BASE_IMAGE=joennlae/halutmatmul-conda-gpu
+ARG BASE_IMAGE=ghcr.io/joennlae/halutmatmul-conda-gpu
 
 # install docker on do machines
 # curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh
 
-# dockerhub: joennlae/halutmatmul-runpod
+# dockerhub: ghcr.io/joennlae/halutmatmul-conda-gpu
 FROM ${BASE_IMAGE} as dev-base
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
