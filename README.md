@@ -63,5 +63,5 @@ docker build -t runpod/<container-name>:<version> -f <container-name>/Dockerfile
 
 ```bash
 docker build -f official-templates/vllm/Dockerfile . # legacy builder
-# tag joennlae/pytorch:2.1.1-py3.10-cuda12.1.1-devel-ubuntu22.04-vllm
+# tag ghcr.io/joennlae/pytorch:2.1.1-py3.10-cuda12.1.1-devel-ubuntu22.04-vllm
 ```
