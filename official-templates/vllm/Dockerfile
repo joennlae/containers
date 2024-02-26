@@ -1,8 +1,6 @@
-ARG BASE_IMAGE
-FROM ${BASE_IMAGE}
+FROM nvidia/cuda:12.1.1-devel-ubuntu22.04
 
-ARG TORCH
-ARG PYTHON_VERSION
+ENV PYTHON_VERSION=3.10
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -37,7 +35,7 @@ RUN ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python && \
 
 
 RUN pip install --upgrade --no-cache-dir pip
-RUN pip install --upgrade --no-cache-dir ${TORCH}
+RUN pip install --upgrade --no-cache-dir git+https://github.com/joennlae/vllm@nice-logging accelerate torch==2.1.2
 RUN pip install --upgrade --no-cache-dir jupyterlab ipywidgets jupyter-archive jupyter_contrib_nbextensions
 
 # Set up Jupyter Notebook
@@ -49,18 +47,18 @@ RUN jupyter contrib nbextension install --user && \
 RUN rm -f /etc/ssh/ssh_host_*
 
 # NGINX Proxy
-COPY --from=proxy nginx.conf /etc/nginx/nginx.conf
-COPY --from=proxy readme.html /usr/share/nginx/html/readme.html
+COPY --from=container-template/proxy nginx.conf /etc/nginx/nginx.conf
+COPY --from=container-template/proxy readme.html /usr/share/nginx/html/readme.html
 
 # Copy the README.md
 COPY README.md /usr/share/nginx/html/README.md
 
 # Start Scripts
-COPY --from=scripts start.sh /
+COPY --from=container-template start.sh /
 RUN chmod +x /start.sh
 
 # Welcome Message
-COPY --from=logo runpod.txt /etc/runpod.txt
+COPY --from=container-template runpod.txt /etc/runpod.txt
 RUN echo 'cat /etc/runpod.txt' >> /root/.bashrc
 RUN echo 'echo -e "\nFor detailed documentation and guides, please visit:\n\033[1;34mhttps://docs.runpod.io/\033[0m and \033[1;34mhttps://blog.runpod.io/\033[0m\n\n"' >> /root/.bashrc
 
