@@ -59,3 +59,9 @@ docker build should be ran from the root of the repository, not from the contain
 ```bash
 docker build -t runpod/<container-name>:<version> -f <container-name>/Dockerfile .
 ```
+### Build vllm container
+
+```bash
+docker build -f official-templates/vllm/Dockerfile . # legacy builder
+# tag joennlae/pytorch:2.1.1-py3.10-cuda12.1.1-devel-ubuntu22.04-vllm
+```
