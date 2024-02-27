@@ -42,6 +42,7 @@ RUN ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python && \
 
 RUN pip install --upgrade --no-cache-dir pip
 COPY --from=cuda-devel /usr/local/cuda /usr/local/cuda
+COPY --from=cuda-devel /usr/local/cuda-12 /usr/local/cuda-12
 
 # should be run in conda env?
 RUN pip install --upgrade --no-cache-dir git+https://github.com/joennlae/vllm@nice-logging accelerate
