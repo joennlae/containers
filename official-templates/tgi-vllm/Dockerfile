@@ -46,7 +46,7 @@ RUN pip install --upgrade --no-cache-dir pip
 # 
 # ENV PATH="/usr/local/cuda-12/bin:${PATH}" \
 #     LD_LIBRARY_PATH="/usr/local/cuda-12/lib64:${LD_LIBRARY_PATH}"
-RUN mamba install nvidia/label/cuda-12.2.2::cuda-toolkit -y
+RUN mamba install nvidia/label/cuda-12.1.1::cuda-toolkit -y
 
 # should be run in conda env?
 RUN pip install --upgrade --no-cache-dir git+https://github.com/joennlae/vllm@nice-logging accelerate
