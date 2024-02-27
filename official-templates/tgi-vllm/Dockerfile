@@ -41,7 +41,7 @@ RUN ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python && \
 
 RUN pip install --upgrade --no-cache-dir pip
 # should be run in conda env?
-RUN pip install --upgrade --no-cache-dir git+https://github.com/joennlae/vllm@nice-logging accelerate torch==2.1.2
+RUN pip install --upgrade --no-cache-dir git+https://github.com/joennlae/vllm@nice-logging accelerate
 
 
 # Remove existing SSH host keys
