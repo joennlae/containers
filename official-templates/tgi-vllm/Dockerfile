@@ -1,4 +1,6 @@
 FROM ghcr.io/huggingface/text-generation-inference
+FROM nvidia/cuda:12.1.1-devel-ubuntu22.04 
+# devel needed for cude env
 # https://github.com/huggingface/text-generation-inference/blob/main/Dockerfile
 
 # https://github.com/huggingface/text-generation-inference/blob/bf700e7eef4771f280c19dbc7270c8c7c20efbbc/Dockerfile#L43
