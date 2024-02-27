@@ -5,7 +5,7 @@ FROM nvidia/cuda:12.1.1-devel-ubuntu22.04
 
 # https://github.com/huggingface/text-generation-inference/blob/bf700e7eef4771f280c19dbc7270c8c7c20efbbc/Dockerfile#L43
 # they also have it on 3.10
-# ENV PYTHON_VERSION=3.10
+ENV PYTHON_VERSION=3.10
 
 # https://github.com/huggingface/text-generation-inference/blob/bf700e7eef4771f280c19dbc7270c8c7c20efbbc/Dockerfile#L242C1-L254C22
 # we replace sagemaker
