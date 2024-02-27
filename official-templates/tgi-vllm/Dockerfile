@@ -1,6 +1,8 @@
 FROM ghcr.io/huggingface/text-generation-inference
 # https://github.com/huggingface/text-generation-inference/blob/main/Dockerfile
 
+FROM nvidia/cuda:12.1.1-devel-ubuntu22.04 as cuda-devel
+
 # https://github.com/huggingface/text-generation-inference/blob/bf700e7eef4771f280c19dbc7270c8c7c20efbbc/Dockerfile#L43
 # they also have it on 3.10
 ENV PYTHON_VERSION=3.10
@@ -43,6 +45,7 @@ RUN pip install --upgrade --no-cache-dir pip
 # should be run in conda env?
 RUN pip install --upgrade --no-cache-dir git+https://github.com/joennlae/vllm@nice-logging accelerate
 
+COPY --from=cuda-devel /usr/local/cuda /usr/local/cuda
 
 # Remove existing SSH host keys
 RUN rm -f /etc/ssh/ssh_host_*
