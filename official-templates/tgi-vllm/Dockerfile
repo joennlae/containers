@@ -1,6 +1,4 @@
 FROM ghcr.io/huggingface/text-generation-inference
-FROM nvidia/cuda:12.1.1-devel-ubuntu22.04 
-# devel needed for cude env
 # https://github.com/huggingface/text-generation-inference/blob/main/Dockerfile
 
 # https://github.com/huggingface/text-generation-inference/blob/bf700e7eef4771f280c19dbc7270c8c7c20efbbc/Dockerfile#L43
@@ -28,6 +26,7 @@ RUN apt-get update --yes && \
     apt install --yes --no-install-recommends git wget curl bash libgl1 software-properties-common openssh-server nginx && \
     add-apt-repository ppa:deadsnakes/ppa && \
     apt install "python${PYTHON_VERSION}-dev" "python${PYTHON_VERSION}-venv" -y --no-install-recommends && \
+    apt install nvidia-cuda-toolkit && \
     apt-get autoremove -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
