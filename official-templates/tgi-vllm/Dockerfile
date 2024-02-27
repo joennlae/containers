@@ -1,6 +1,7 @@
-FROM nvidia/cuda:12.1.1-devel-ubuntu22.04 AS cuda-devel
 
-FROM ghcr.io/huggingface/text-generation-inference
+FROM ghcr.io/huggingface/text-generation-inference as tgi
+
+FROM nvidia/cuda:12.1.1-devel-ubuntu22.04
 # https://github.com/huggingface/text-generation-inference/blob/main/Dockerfile
 
 # https://github.com/huggingface/text-generation-inference/blob/bf700e7eef4771f280c19dbc7270c8c7c20efbbc/Dockerfile#L43
@@ -41,12 +42,9 @@ RUN ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python && \
 
 
 RUN pip install --upgrade --no-cache-dir pip
-# COPY --from=cuda-devel /usr/local/cuda /usr/local/cuda
-# COPY --from=cuda-devel /usr/local/cuda-12 /usr/local/cuda-12
-# 
-# ENV PATH="/usr/local/cuda-12/bin:${PATH}" \
-#     LD_LIBRARY_PATH="/usr/local/cuda-12/lib64:${LD_LIBRARY_PATH}"
-RUN mamba install nvidia/label/cuda-12.1.1::cuda-toolkit -y
+
+# installing it via mamba was the quickest way that works in the environment
+RUN mamba install -c nvidia cuda-toolkit -y
 
 # should be run in conda env?
 RUN pip install --upgrade --no-cache-dir git+https://github.com/joennlae/vllm@nice-logging accelerate
