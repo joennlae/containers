@@ -41,10 +41,10 @@ RUN ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python && \
 
 
 RUN pip install --upgrade --no-cache-dir pip
-# should be run in conda env?
-RUN pip install --upgrade --no-cache-dir git+https://github.com/joennlae/vllm@nice-logging accelerate
 
 COPY --from=cuda-devel /usr/local/cuda /usr/local/cuda
+# should be run in conda env?
+RUN pip install --upgrade --no-cache-dir git+https://github.com/joennlae/vllm@nice-logging accelerate
 
 # Remove existing SSH host keys
 RUN rm -f /etc/ssh/ssh_host_*
