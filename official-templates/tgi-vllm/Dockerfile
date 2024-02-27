@@ -23,28 +23,28 @@ WORKDIR /
 # Create workspace directory
 RUN mkdir /workspace
 
-# Update, upgrade, install packages and clean up
-RUN apt-get update --yes && \
-    apt-get upgrade --yes && \
-    apt install --yes --no-install-recommends git wget curl bash libgl1 software-properties-common openssh-server nginx && \
-    add-apt-repository ppa:deadsnakes/ppa && \
-    apt install "python${PYTHON_VERSION}-dev" "python${PYTHON_VERSION}-venv" -y --no-install-recommends && \
-    apt-get autoremove -y && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
-# Set up Python and pip
-RUN ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python && \
-    rm /usr/bin/python3 && \
-    ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python3 && \
-    curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
-    python get-pip.py
+####
+####
+####
+# install mamba and TGI COPY
 
-
-RUN pip install --upgrade --no-cache-dir pip
-
-# should be run in conda env?
-RUN pip install --upgrade --no-cache-dir git+https://github.com/joennlae/vllm@nice-logging accelerate
+ARG PYTORCH_VERSION=2.1.1
+ARG PYTHON_VERSION=3.10
+# Keep in sync with `server/pyproject.toml
+ARG CUDA_VERSION=12.1
+ARG MAMBA_VERSION=23.3.1-1
+ARG CUDA_CHANNEL=nvidia
+ARG INSTALL_CHANNEL=pytorch
+ARG MAMBA_VERSION=23.3.1-1
+ARG TARGETPLATFORM=x86_64
+RUN case ${TARGETPLATFORM} in \
+         "linux/arm64")  MAMBA_ARCH=aarch64  ;; \
+         *)              MAMBA_ARCH=x86_64   ;; \
+    esac && \
+    curl -fsSL -v -o ~/mambaforge.sh -O  "https://github.com/conda-forge/miniforge/releases/download/${MAMBA_VERSION}/Mambaforge-${MAMBA_VERSION}-Linux-${MAMBA_ARCH}.sh"
+RUN chmod +x ~/mambaforge.sh && \
+    bash ~/mambaforge.sh -b -p /opt/conda && \
+    rm ~/mambaforge.sh
 
 ### Copy over TGI container
 
@@ -63,6 +63,28 @@ COPY --from=tgi  /usr/local/bin/text-generation-benchmark /usr/local/bin/text-ge
 COPY --from=tgi  /usr/local/bin/text-generation-router /usr/local/bin/text-generation-router
 COPY --from=tgi  /usr/local/bin/text-generation-launcher /usr/local/bin/text-generation-launcher
 COPY --from=tgi  /usr/src /usr/src
+
+### Install vllm
+# should be installed into conda env
+RUN pip install --upgrade --no-cache-dir git+https://github.com/joennlae/vllm@nice-logging accelerate
+
+####
+####
+####
+
+
+### From here it is runpod related stuff
+###
+###
+# Update, upgrade, install packages and clean up
+RUN apt-get update --yes && \
+    apt-get upgrade --yes && \
+    apt install --yes --no-install-recommends git wget curl bash libgl1 software-properties-common openssh-server nginx && \
+    add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
 
 # Remove existing SSH host keys
 RUN rm -f /etc/ssh/ssh_host_*
