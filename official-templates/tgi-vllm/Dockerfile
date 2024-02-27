@@ -1,3 +1,5 @@
+FROM nvidia/cuda:12.1.1-devel-ubuntu22.04 AS cuda-devel
+
 FROM ghcr.io/huggingface/text-generation-inference
 # https://github.com/huggingface/text-generation-inference/blob/main/Dockerfile
 
@@ -39,8 +41,6 @@ RUN ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python && \
 
 
 RUN pip install --upgrade --no-cache-dir pip
-
-FROM nvidia/cuda:12.1.1-devel-ubuntu22.04 AS cuda-devel
 COPY --from=cuda-devel /usr/local/cuda /usr/local/cuda
 
 # should be run in conda env?
