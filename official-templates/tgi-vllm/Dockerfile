@@ -44,6 +44,9 @@ RUN pip install --upgrade --no-cache-dir pip
 COPY --from=cuda-devel /usr/local/cuda /usr/local/cuda
 COPY --from=cuda-devel /usr/local/cuda-12 /usr/local/cuda-12
 
+ENV PATH="/usr/local/cuda-12/bin:${PATH}" \
+    LD_LIBRARY_PATH="/usr/local/cuda-12/lib64:${LD_LIBRARY_PATH}"
+
 # should be run in conda env?
 RUN pip install --upgrade --no-cache-dir git+https://github.com/joennlae/vllm@nice-logging accelerate
 
