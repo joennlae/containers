@@ -43,11 +43,26 @@ RUN ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python && \
 
 RUN pip install --upgrade --no-cache-dir pip
 
-# installing it via mamba was the quickest way that works in the environment
-RUN mamba install -c nvidia cuda-toolkit -y
-
 # should be run in conda env?
 RUN pip install --upgrade --no-cache-dir git+https://github.com/joennlae/vllm@nice-logging accelerate
+
+### Copy over TGI container
+
+# Conda env
+ENV PATH=/opt/conda/bin:$PATH \
+    CONDA_PREFIX=/opt/conda
+
+# Text Generation Inference base env
+ENV HUGGINGFACE_HUB_CACHE=/data \
+    HF_HUB_ENABLE_HF_TRANSFER=1 \
+    PORT=80
+
+COPY --from=tgi /opt/conda /opt/conda
+
+COPY --from=tgi  /usr/local/bin/text-generation-benchmark /usr/local/bin/text-generation-benchmark
+COPY --from=tgi  /usr/local/bin/text-generation-router /usr/local/bin/text-generation-router
+COPY --from=tgi  /usr/local/bin/text-generation-launcher /usr/local/bin/text-generation-launcher
+COPY --from=tgi  /usr/src /usr/src
 
 # Remove existing SSH host keys
 RUN rm -f /etc/ssh/ssh_host_*
