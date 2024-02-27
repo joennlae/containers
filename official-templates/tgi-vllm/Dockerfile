@@ -23,6 +23,16 @@ WORKDIR /
 # Create workspace directory
 RUN mkdir /workspace
 
+# Update, upgrade, install packages and clean up
+RUN apt-get update --yes && \
+    apt-get upgrade --yes && \
+    apt install --yes --no-install-recommends git wget curl bash libgl1 software-properties-common openssh-server nginx && \
+    add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
+
 ####
 ####
 ####
@@ -76,15 +86,7 @@ RUN pip install --upgrade --no-cache-dir git+https://github.com/joennlae/vllm@ni
 ### From here it is runpod related stuff
 ###
 ###
-# Update, upgrade, install packages and clean up
-RUN apt-get update --yes && \
-    apt-get upgrade --yes && \
-    apt install --yes --no-install-recommends git wget curl bash libgl1 software-properties-common openssh-server nginx && \
-    add-apt-repository ppa:deadsnakes/ppa && \
-    apt-get autoremove -y && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
+
 
 # Remove existing SSH host keys
 RUN rm -f /etc/ssh/ssh_host_*
