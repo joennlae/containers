@@ -1,5 +1,5 @@
 
-FROM ghcr.io/huggingface/text-generation-inference as tgi
+FROM ghcr.io/huggingface/text-generation-inference:sha-8a5bcba as tgi
 
 FROM nvidia/cuda:12.1.1-devel-ubuntu22.04
 # https://github.com/huggingface/text-generation-inference/blob/main/Dockerfile
