@@ -26,7 +26,7 @@ RUN mkdir /workspace
 # Update, upgrade, install packages and clean up
 RUN apt-get update --yes && \
     apt-get upgrade --yes && \
-    apt install --yes --no-install-recommends git wget curl bash libgl1 software-properties-common openssh-server nginx && \
+    apt install --yes --no-install-recommends tmux vim htop git wget curl bash libgl1 software-properties-common openssh-server nginx && \
     add-apt-repository ppa:deadsnakes/ppa && \
     apt-get autoremove -y && \
     apt-get clean && \
@@ -76,7 +76,10 @@ COPY --from=tgi  /usr/src /usr/src
 
 ### Install vllm
 # should be installed into conda env
-RUN pip install --upgrade --no-cache-dir git+https://github.com/joennlae/vllm@nice-logging accelerate
+RUN pip install --upgrade --no-cache-dir git+https://github.com/joennlae/vllm@new-nice-logging accelerate
+RUN pip install uv
+RUN conda init
+RUN uv pip install flash-attn --no-build-isolation
 
 ####
 ####
