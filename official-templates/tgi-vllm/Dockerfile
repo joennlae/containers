@@ -38,14 +38,14 @@ RUN apt-get update --yes && \
 ####
 # install mamba and TGI COPY
 
+# https://github.com/huggingface/text-generation-inference/blob/bf700e7eef4771f280c19dbc7270c8c7c20efbbc/Dockerfile#L42
+# keep in sync
 ARG PYTORCH_VERSION=2.1.1
 ARG PYTHON_VERSION=3.10
-# Keep in sync with `server/pyproject.toml
 ARG CUDA_VERSION=12.1
 ARG MAMBA_VERSION=23.3.1-1
 ARG CUDA_CHANNEL=nvidia
 ARG INSTALL_CHANNEL=pytorch
-ARG MAMBA_VERSION=23.3.1-1
 ARG TARGETPLATFORM=x86_64
 RUN case ${TARGETPLATFORM} in \
          "linux/arm64")  MAMBA_ARCH=aarch64  ;; \
@@ -57,6 +57,7 @@ RUN chmod +x ~/mambaforge.sh && \
     rm ~/mambaforge.sh
 
 ### Copy over TGI container
+# pytorch etc is installed into the conda env
 
 # Conda env
 ENV PATH=/opt/conda/bin:$PATH \
@@ -81,15 +82,10 @@ RUN pip install uv
 RUN conda init
 RUN uv pip install flash-attn --no-build-isolation
 
-####
-####
-####
-
 
 ### From here it is runpod related stuff
 ###
 ###
-
 
 # Remove existing SSH host keys
 RUN rm -f /etc/ssh/ssh_host_*
