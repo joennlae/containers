@@ -1,5 +1,5 @@
 
-FROM ghcr.io/huggingface/text-generation-inference:sha-8a5bcba as tgi
+FROM ghcr.io/huggingface/text-generation-inference:sha-0d72af5 as tgi
 
 FROM nvidia/cuda:12.1.1-devel-ubuntu22.04
 # https://github.com/huggingface/text-generation-inference/blob/main/Dockerfile
@@ -80,7 +80,8 @@ COPY --from=tgi  /usr/src /usr/src
 RUN pip install --upgrade --no-cache-dir git+https://github.com/joennlae/vllm@new-nice-logging accelerate
 RUN pip install uv
 RUN conda init
-RUN uv pip install flash-attn --no-build-isolation
+# RUN uv pip install flash-attn --no-build-isolation 
+# this needs to be run manually if vllm is used
 
 
 ### From here it is runpod related stuff
